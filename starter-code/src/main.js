@@ -26,9 +26,10 @@ var cards = [
 ];
 
 $(document).ready(function(){
-  var memoryGame = new MemoryGame(cards);
+  var newMemoryGame = new MemoryGame(cards);
+  newMemoryGame.shuffleCards(cards);
   var html = '';
-  memoryGame.cards.forEach(function (pic) {
+  newMemoryGame.cards.forEach(function (pic) {
     html += '<div class="card" data-card-name="'+ pic.name +'">';
     html += '  <div class="back" name="'+ pic.img +'"></div>';
     html += '  <div class="front" style="background: url(img/'+ pic.img +') no-repeat"></div>';
@@ -40,6 +41,19 @@ $(document).ready(function(){
 
   // Bind the click event of each element to a function
   $('.back').click(function () {
+    const clickedCard = this;
+    const theNameOfTheCard = $(clickedCard).attr("name");
+    $(clickedCard).addClass("blocked");
+    $(clickedCard).addClass("justClicked");
+    $(clickedCard).css("background", "url(img/" + theNameOfTheCard +")");
+    // push the clickedCard into the "pickedCards" arrays
+    newMemoryGame.pickedCards.push(theNameOfTheCard);
+    // since we are checking if 2 cards are the Same , we need to do it
+    if (newMemoryGame.pickedCards.length === 2){
+      let theFirstCard = newMemoryGame.pickedCards[0];
+      let theSecondCard = newMemoryGame.pickedCards[1];
+      newMemoryGame.checkIfPair(theFirstCard, theSecondCard);
+    }
     // TODO: write some code here
   });
 });
